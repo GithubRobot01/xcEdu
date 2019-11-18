@@ -6,7 +6,7 @@ import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
-import com.xuecheng.manage_cms.service.PageService;
+import com.xuecheng.manage_cms.service.CmsPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cms/page")
 public class CmsPageController implements CmsPageControllerApi {
     @Autowired
-    PageService pageService;
+    CmsPageService pageService;
 
     //查询所有页面信息
     @Override
