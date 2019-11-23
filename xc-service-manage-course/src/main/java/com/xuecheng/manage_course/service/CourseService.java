@@ -3,6 +3,7 @@ package com.xuecheng.manage_course.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
+import com.xuecheng.framework.domain.course.CourseMarket;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
@@ -14,10 +15,7 @@ import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
-import com.xuecheng.manage_course.dao.CourseBaseRepository;
-import com.xuecheng.manage_course.dao.CourseMapper;
-import com.xuecheng.manage_course.dao.TeachplanMapper;
-import com.xuecheng.manage_course.dao.TeachplanRepository;
+import com.xuecheng.manage_course.dao.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +37,8 @@ public class CourseService {
     CourseBaseRepository courseBaseRepository;
     @Autowired
     TeachplanRepository teachplanRepository;
+    @Autowired
+    CourseMarketRepository courseMarketRepository;
 
     //查询课程计划
     @Transactional
@@ -159,5 +159,27 @@ public class CourseService {
         Map<String,String> map=new  HashMap<>();
         map.put("pic",pic);
         return map;
+    }
+
+    public CourseMarket getCourseMarketById(String courseId) {
+        Optional<CourseMarket> optional = courseMarketRepository.findById(courseId);
+        if (optional.isPresent()){
+            return optional.get();
+        }
+        return null;
+    }
+
+    public CourseMarket updateCourseMarket(String id, CourseMarket courseMarket) {
+        CourseMarket courseMarket1 = this.getCourseMarketById(id);
+        if (courseMarket1!=null){
+            BeanUtils.copyProperties(courseMarket,courseMarket1);
+            courseMarketRepository.save(courseMarket1);
+        }else {
+            courseMarket1=new CourseMarket();
+            BeanUtils.copyProperties(courseMarket,courseMarket1);
+            courseMarket1.setId(id);
+            courseMarketRepository.save(courseMarket1);
+        }
+        return courseMarket1;
     }
 }

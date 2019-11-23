@@ -2,10 +2,12 @@ package com.xuecheng.manage_course.controller;
 
 import com.xuecheng.api.course.CourseControllerApi;
 import com.xuecheng.framework.domain.course.CourseBase;
+import com.xuecheng.framework.domain.course.CourseMarket;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.domain.course.response.AddCourseResult;
+import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.service.CourseService;
@@ -26,7 +28,7 @@ public class CourseController implements CourseControllerApi {
         return courseService.findTeachplanList(courseId);
     }
 
-    @PostMapping("teachplan/add")
+    @PostMapping("/teachplan/add")
     public ResponseResult addTeachplan(@RequestBody Teachplan teachplan) {
         return courseService.addTeachplan(teachplan);
     }
@@ -57,5 +59,21 @@ public class CourseController implements CourseControllerApi {
     public Map findCoursePicById(@PathVariable("id") String id) {
         System.out.println(id);
         return courseService.findCoursePicById(id);
+    }
+
+    @Override
+    @GetMapping("/coursemarket/get/{id}")
+    public CourseMarket getCourseMarketById(@PathVariable("id") String courseId) {
+        return courseService.getCourseMarketById(courseId);
+    }
+
+    @Override
+    @PostMapping("/coursemarket/update/{id}")
+    public ResponseResult updateCourseMarket(@PathVariable("id") String id,@RequestBody CourseMarket courseMarket) {
+        CourseMarket courseMarket1=courseService.updateCourseMarket(id,courseMarket);
+        if (courseMarket1==null){
+            return new ResponseResult(CommonCode.FAIL);
+        }
+        return new ResponseResult(CommonCode.SUCCESS);
     }
 }
