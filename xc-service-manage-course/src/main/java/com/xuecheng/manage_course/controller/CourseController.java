@@ -3,6 +3,7 @@ package com.xuecheng.manage_course.controller;
 import com.xuecheng.api.course.CourseControllerApi;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.CourseMarket;
+import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
@@ -13,8 +14,6 @@ import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/course")
@@ -54,11 +53,9 @@ public class CourseController implements CourseControllerApi {
         return courseService.updateCourseBase(id,courseBase);
     }
 
-    @Override
     @GetMapping("/coursepic/list/{id}")
-    public Map findCoursePicById(@PathVariable("id") String id) {
-        System.out.println(id);
-        return courseService.findCoursePicById(id);
+    public CoursePic findCoursePic(@PathVariable("id") String id) {
+        return courseService.findCoursePic(id);
     }
 
     @Override
@@ -75,5 +72,17 @@ public class CourseController implements CourseControllerApi {
             return new ResponseResult(CommonCode.FAIL);
         }
         return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    @Override
+    @PostMapping("/coursepic/add")
+    public ResponseResult addCoursePic(@RequestParam("courseId") String courseId,@RequestParam("pic") String pic) {
+        return courseService.addCoursePic(courseId,pic);
+    }
+
+    @Override
+    @DeleteMapping("/coursepic/delete")
+    public ResponseResult deleteCoursePic(@RequestParam("courseId") String courseId) {
+        return courseService.deleteCoursePic(courseId);
     }
 }

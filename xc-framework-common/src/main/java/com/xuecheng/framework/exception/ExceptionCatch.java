@@ -26,7 +26,7 @@ public class ExceptionCatch {
     //定义map的builder对象,用于构建ImmutableMap
     protected static ImmutableMap.Builder<Class<? extends Throwable>,ResultCode> builder=ImmutableMap.builder();
 
-    @ExceptionHandler(CustomException.class)
+   // @ExceptionHandler(CustomException.class)
     @ResponseBody
     public ResponseResult customException(CustomException customException){
         //记录日志
@@ -35,7 +35,7 @@ public class ExceptionCatch {
         return new ResponseResult(resultCode);
     }
 
-    @ExceptionHandler(Exception.class)
+    //@ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseResult exception(Exception exception){
         //记录日志

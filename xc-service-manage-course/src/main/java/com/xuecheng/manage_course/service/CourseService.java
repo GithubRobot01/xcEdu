@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.CourseMarket;
+import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
@@ -22,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -39,6 +38,8 @@ public class CourseService {
     TeachplanRepository teachplanRepository;
     @Autowired
     CourseMarketRepository courseMarketRepository;
+    @Autowired
+    CoursePicRepository coursePicRepository;
 
     //查询课程计划
     @Transactional
@@ -154,11 +155,13 @@ public class CourseService {
     }
 
     @Transactional
-    public Map findCoursePicById(String id) {
-        String pic = courseMapper.findCoursePicById(id);
-        Map<String,String> map=new  HashMap<>();
-        map.put("pic",pic);
-        return map;
+    public CoursePic findCoursePic(String id) {
+        Optional<CoursePic> optional= coursePicRepository.findById(id);
+        if (optional.isPresent()){
+            CoursePic coursePic=optional.get();
+            return coursePic;
+        }
+        return null;
     }
 
     public CourseMarket getCourseMarketById(String courseId) {
@@ -181,5 +184,32 @@ public class CourseService {
             courseMarketRepository.save(courseMarket1);
         }
         return courseMarket1;
+    }
+
+    @Transactional
+    public ResponseResult addCoursePic(String courseId, String pic) {
+        CoursePic coursePic=null;
+        //查询课程图片
+        Optional<CoursePic> optional = coursePicRepository.findById(courseId);
+        if (optional.isPresent()){
+            coursePic=optional.get();
+        }
+        if (coursePic==null){
+            coursePic=new CoursePic();
+        }
+        coursePic.setCourseid(courseId);
+        coursePic.setPic(pic);
+        coursePicRepository.save(coursePic);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    @Transactional
+    public ResponseResult deleteCoursePic(String courseId) {
+        long count = coursePicRepository.deleteByCourseid(courseId);
+        System.out.println(count);
+        if (count>0){
+            return new ResponseResult(CommonCode.SUCCESS);
+        }
+        return new ResponseResult(CommonCode.FAIL);
     }
 }
