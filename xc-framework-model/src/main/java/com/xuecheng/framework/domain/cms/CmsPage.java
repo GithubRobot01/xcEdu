@@ -1,6 +1,7 @@
 package com.xuecheng.framework.domain.cms;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,6 +18,7 @@ import java.util.List;
 @Data
 @ToString
 @Document(collection = "cms_page")
+@NoArgsConstructor
 public class CmsPage {
     /**
      * 页面名称、别名、访问地址、类型（静态/动态）、页面模版、状态

@@ -306,4 +306,11 @@ public class CmsPageService {
     }
 
 
+    public CmsPageResult save(CmsPage cmsPage) {
+        CmsPage one = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+        if (one==null){
+            return this.add(cmsPage);
+        }
+        return this.update(one.getPageId(),cmsPage);
+    }
 }

@@ -33,11 +33,11 @@ public class GridFsTest {
     @Test
     public void storeTest() throws FileNotFoundException {
         //要存储的文件
-        File file=new File("d://index_banner.html");
+        File file=new File("c://course.ftl");
         //定义输出流
         FileInputStream inputStream=new FileInputStream(file);
         //向GridFs存储文件
-        ObjectId objectId = gridFsTemplate.store(inputStream, "测试", "");
+        ObjectId objectId = gridFsTemplate.store(inputStream, "course.ftl", "");
         //得到文件id
         String fileId=objectId.toString();
         System.out.println(fileId);

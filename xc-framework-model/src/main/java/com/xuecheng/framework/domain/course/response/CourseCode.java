@@ -18,6 +18,7 @@ public enum CourseCode implements ResultCode {
     COURSE_PUBLISH_VIEWERROR(false,31005,"发布课程视图出错！"),
     COURSE_MEDIS_URLISNULL(false,31106,"选择的媒资文件访问地址为空！"),
     COURSE_NOT_EXISTS(false,31107,"选择的媒资文件访问地址为空！"),
+    COURSE_GET_NOTEXISTS(false,31108,"课程不存在！"),
     COURSE_MEDIS_NAMEISNULL(false,31108,"选择的媒资文件名称为空！");
 
     //操作代码
