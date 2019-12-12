@@ -15,6 +15,7 @@ import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.domain.course.response.AddCourseResult;
+import com.xuecheng.framework.domain.course.response.CmsPostPageResult;
 import com.xuecheng.framework.domain.course.response.CourseCode;
 import com.xuecheng.framework.domain.course.response.CoursePublishResult;
 import com.xuecheng.framework.exception.ExceptionCast;
@@ -290,4 +291,48 @@ public class CourseService {
         //返回对象
         return new CoursePublishResult(CommonCode.SUCCESS,url);
     }
+
+    @Transactional
+    public CoursePublishResult publish(String courseId) {
+        //调用cms一键发布接口将课程详情页面发布到服务器
+        CourseBase one = this.findCourseBaseById(courseId);
+        //发布课程预览页面
+        CmsPage cmsPage = new CmsPage();
+        //站点
+        cmsPage.setSiteId(publish_siteId);//课程预览站点
+        //模板
+        cmsPage.setTemplateId(publish_templateId);
+        //页面名称
+        cmsPage.setPageName(courseId+".html");
+        //页面别名
+        cmsPage.setPageAliase(one.getName());
+        //页面访问路径
+        cmsPage.setPageWebPath(publish_page_webpath);
+        //页面存储路径
+        cmsPage.setPagePhysicalPath(publish_page_physicalpath);
+        //数据url
+        cmsPage.setDataUrl(publish_dataUrlPre+courseId);
+
+        CmsPostPageResult cmsPostPageResult = cmsPageClient.postPageQuick(cmsPage);
+        if (!cmsPostPageResult.isSuccess()){
+            return new CoursePublishResult(CommonCode.FAIL,null);
+        }
+        //保存课程的发布状态为"已发布"
+        CourseBase courseBase = this.saveCoursePubState(courseId);
+
+        //保存课程索引信息
+
+        //缓存课程的信息
+        String pageUrl = cmsPostPageResult.getPageUrl();
+        return new CoursePublishResult(CommonCode.SUCCESS,pageUrl);
+    }
+
+    //更改课程状态为已发布
+    private CourseBase saveCoursePubState(String courseId){
+        CourseBase courseBaseById = this.findCourseBaseById(courseId);
+        courseBaseById.setStatus("202002");
+        courseBaseRepository.save(courseBaseById);
+        return courseBaseById;
+    }
+
 }
